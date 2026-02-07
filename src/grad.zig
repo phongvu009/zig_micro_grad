@@ -34,11 +34,15 @@ pub const Value = struct {
     }
 
     //clean-up memory
+    //wihout *const , *Self: is mutable pointer
     pub fn deinit(self: *Self) void {
         self.alloc.destroy(self);
     }
 
     //help to debug
+    //*const : Read-only pointer
+    // Self -> const Self -> *const Self
+    // from right to left : pointer to constant Self
     pub fn print(self: *const Self) void {
         std.debug.print("Value(label={?s}, value={}, grad={})", .{ self.label, self.value, self.grad });
     }
