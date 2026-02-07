@@ -37,4 +37,9 @@ pub const Value = struct {
     pub fn deinit(self: *Self) void {
         self.alloc.destroy(self);
     }
+
+    //help to debug
+    pub fn print(self: *const Self) void {
+        std.debug.print("Value(label={?s}, value={}, grad={})", .{ self.label, self.value, self.grad });
+    }
 };

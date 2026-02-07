@@ -18,8 +18,9 @@ pub fn main() !void {
 
     //create value instance from Value Type
     const v = try zigrad.Value.init(&allocator, 10.5, "input_x");
-
     //ensure value is cleaned up when we are done.
     defer v.deinit();
-    std.debug.print("Create Value : {s} = {d:.2}\n", .{ v.label.?, v.value });
+
+    //std.debug.print("Create Value : {s} = {d:.2}\n", .{ v.label.?, v.value });
+    v.print();
 }
