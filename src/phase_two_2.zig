@@ -120,7 +120,7 @@ test "multiply operation" {
     const b = try Value.init(allocator, 3.0, "b");
     const x = try Value.init(allocator, 2.0, "x");
 
-    // build small graph : (a+b)*x
+    // example : (a+b)*x
     const sum = try add(allocator, a, b);
     sum.label = "sum";
 
