@@ -41,9 +41,9 @@ pub const Value = struct {
 
     pub fn print(self: *const Self) void {
         const label = self.label orelse "anon";
-        const op = self.op orelse "none";
+        const op = self.op orelse "anon";
         std.debug.print("Value(value={d}, grad={d}, label={s}, op={s}", .{ self.value, self.grad, label, op });
-        //check if any children, unwrap and do a for loop
+        //check if any children, unwrap since it has ? Option and do a for loop
         if (self.children) |children| {
             var first = true;
             std.debug.print(", children=[", .{});
