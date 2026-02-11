@@ -6,7 +6,7 @@ pub const Value = struct {
     value: f64,
     label: ?[]const u8 = null,
     grad: f64 = 0.0,
-    children: ?[]*f64 = null,
+    children: ?[]*Value = null,
     op: ?[]const u8 = null,
     //Optional to have constant pointer to function or null
     // *const : constant pointer
@@ -15,8 +15,8 @@ pub const Value = struct {
     alloc: *const std.mem.Allocator,
 
     pub fn init(allocator: *const std.mem.Allocator, value: f64, label: ?[]const u8) !*Self {
-        const self = allocator.mem.create(Self);
-        self.* = .{ .value = value, .label = label, .children = null, .op = null, ._backward = null, .alloac = allocator };
+        const self = try allocator.create(Self);
+        self.* = .{ .value = value, .label = label, .children = null, .op = null, ._backward = null, .alloc = allocator };
 
         return self;
     }
@@ -92,7 +92,7 @@ pub fn add(allocator: *const std.mem.Allocator, v1: *Value, v2: *Value) !*Value 
     //
     out._backward = add_backward;
 
-    const children = allocator.alloc(*Value, 2);
+    const children = try allocator.alloc(*Value, 2);
     children[0] = v1;
     children[1] = v2;
     out.children = children;
@@ -105,7 +105,7 @@ test "Backward for Addition" {
     const a = try Value.init(allocator, 2.0, "a");
     const b = try Value.init(allocator, 3.0, "b");
 
-    const out = try Value.init(allocator, a, b);
+    const out = try add(allocator, a, b);
     out.label = "output";
 
     std.debug.print("Output of sum is {s}={d}\n", .{ out.label.?, out.value });
@@ -114,7 +114,7 @@ test "Backward for Addition" {
     try out.backward();
 
     std.debug.print(" dL/da: {d:.2}\n", .{a.grad});
-    std.debug.print(" dL/db: {d:.2}\n, .{b.grad}");
+    std.debug.print(" dL/db: {d:.2}\n", .{b.grad});
 
     out.deinit();
     b.deinit();
